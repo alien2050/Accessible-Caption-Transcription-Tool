@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+                    <meta charset="UTF-8" />
+                    <meta name="viewport" content="width=device-width, initial-scale=1" />
+                    <title>Transcriber & Captions</title>
+                    <link rel="stylesheet" href="styles/style.css" />
+</head>
+
+<body>
+                    <button id="theme-toggle" class="theme-toggle" type="button" aria-controls="theme-panel"
+                                        aria-expanded="false" data-label-show="Show theme" data-label-hide="Hide theme">
+                                        Show theme
+                    </button>
+
+
+                    <aside id="theme-panel" class="theme-panel" aria-label="Theme settings" aria-hidden="true">
+                                        <div id="theme-controls"></div>
+                    </aside>
+
+                    <div class="app">
+
+
+                                        <div id="unsupported" class="unsupported" style="display:none;">
+                                                            Your browser doesn't support the Web Speech API.<br />
+                                                            Try using the latest version of Chrome or Microsoft Edge.
+                                        </div>
+
+                                        <div class="controls">
+                                                            <button id="toggleBtn">Start listening</button>
+
+                                                            <div class="status">
+                                                                                <span id="statusDot"
+                                                                                                    class="status-dot"></span>
+                                                                                <span id="statusText">Idle</span>
+                                                            </div>
+
+                                                            <button id="downloadBtn" type="button">
+                                                                                Download transcript
+                                                            </button>
+                                        </div>
+
+                                        <div class="section-title">Caption</div>
+                                        <div class="spotlight-box">
+                                                            <span id="spotlightText" class="spotlight-placeholder">
+                                                                                Waiting for speech…
+                                                            </span>
+                                        </div>
+
+                                        <div class="section-title">Transcript</div>
+                                        <div class="transcript-history-box" id="historyTranscript" aria-live="polite">
+                                        </div>
+                    </div>
+
+                    <script src="src/app.js"></script>
+                    <script src="src/themes/factory-themes.js"></script>
+                    <script src="src/themes/theme.js"></script>
+</body>
+
+</html>
