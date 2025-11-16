@@ -9,11 +9,14 @@ const statusText = document.getElementById("statusText");
 const spotlightEl = document.getElementById("spotlightText");
 const historyEl = document.getElementById("historyTranscript");
 const downloadBtn = document.getElementById("downloadBtn");
+const clearTranscriptBtn = document.getElementById("clearTranscriptBtn");
 
 const MAX_CAPTION_WORDS = 20;
+const TRANSCRIPT_STORAGE_KEY = "transcriptHistoryEntries";
 
 // Stores all final entries for download/history
-const transcriptEntries = [];
+const transcriptEntries = loadTranscriptEntries();
+hydrateTranscriptHistory();
 
 // Rolling buffer of words shown in the caption
 let captionWords = [];
@@ -92,13 +95,74 @@ function appendToHistory(text) {
 
   transcriptEntries.push(trimmed);
 
+  renderHistoryLine(trimmed);
+  historyEl.scrollTop = historyEl.scrollHeight;
+  persistTranscriptEntries();
+  updateTranscriptActionState();
+}
+
+function renderHistoryLine(text) {
   const line = document.createElement("div");
   line.className = "history-line";
-  line.textContent = trimmed;
+  line.textContent = text;
   historyEl.appendChild(line);
+}
 
-  historyEl.scrollTop = historyEl.scrollHeight;
-  downloadBtn.disabled = transcriptEntries.length === 0;
+function hydrateTranscriptHistory() {
+  historyEl.innerHTML = "";
+  transcriptEntries.forEach((entry) => renderHistoryLine(entry));
+  if (transcriptEntries.length) {
+    historyEl.scrollTop = historyEl.scrollHeight;
+  }
+  updateTranscriptActionState();
+}
+
+function updateTranscriptActionState() {
+  const hasEntries = transcriptEntries.length > 0;
+  downloadBtn.disabled = !hasEntries;
+  if (clearTranscriptBtn) {
+    clearTranscriptBtn.disabled = !hasEntries;
+  }
+}
+
+function persistTranscriptEntries() {
+  try {
+    if (transcriptEntries.length) {
+      localStorage.setItem(
+        TRANSCRIPT_STORAGE_KEY,
+        JSON.stringify(transcriptEntries)
+      );
+    } else {
+      localStorage.removeItem(TRANSCRIPT_STORAGE_KEY);
+    }
+  } catch (err) {
+    console.warn("Failed to save transcript to storage:", err);
+  }
+}
+
+function loadTranscriptEntries() {
+  try {
+    const stored = localStorage.getItem(TRANSCRIPT_STORAGE_KEY);
+    if (!stored) return [];
+    const parsed = JSON.parse(stored);
+    if (Array.isArray(parsed)) {
+      return parsed
+        .map((entry) => (typeof entry === "string" ? entry.trim() : ""))
+        .filter(Boolean);
+    }
+  } catch (err) {
+    console.warn("Failed to load transcript from storage:", err);
+  }
+  return [];
+}
+
+function clearTranscriptHistory() {
+  if (!transcriptEntries.length) return;
+  transcriptEntries.length = 0;
+  historyEl.innerHTML = "";
+  historyEl.scrollTop = 0;
+  persistTranscriptEntries();
+  updateTranscriptActionState();
 }
 
 function setStatus(state, message) {
@@ -249,3 +313,7 @@ downloadBtn.addEventListener("click", () => {
   document.body.removeChild(link);
   URL.revokeObjectURL(blobUrl);
 });
+
+if (clearTranscriptBtn) {
+  clearTranscriptBtn.addEventListener("click", clearTranscriptHistory);
+}
