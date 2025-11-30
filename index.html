@@ -56,11 +56,97 @@
                                         </div>
                                         <div class="transcript-history-box" id="historyTranscript" aria-live="polite">
                                         </div>
+
+                                        <section class="how-to" data-collapsed="true">
+                                                            <div class="how-to-toolbar">
+                                                                                <div class="how-to-header">
+                                                                                                    <h2>How to get started</h2>
+                                                                                                    <p>Follow these quick steps to turn on your microphone or to pick an input source.</p>
+                                                                                </div>
+                                                                                <button id="how-to-toggle" class="how-to-toggle" type="button" aria-expanded="true" aria-controls="how-to-content">Hide setup guide</button>
+                                                            </div>
+                                                            <div id="how-to-content" class="how-to-content">
+                                                                                <div class="how-to-grid">
+                                                                                                    <article class="how-to-card">
+                                                                                                                        <div class="step-badge">1</div>
+                                                                                                                        <img src="images/turn-on.png" alt="Toggle to turn on microphone access">
+                                                                                                                        <div class="card-body">
+                                                                                                                                                <h3>Turn on microphone/input access</h3>
+                                                                                                                                                <p>Enable mic access in your system settings so the app can hear the sound source.</p>
+                                                                                                                        </div>
+                                                                                                    </article>
+                                                                                                    <article class="how-to-card">
+                                                                                                                        <div class="step-badge">2</div>
+                                                                                                                        <img src="images/running.png" alt="Recording indicator showing input is active">
+                                                                                                                        <div class="card-body">
+                                                                                                                                                <h3>Is listening</h3>
+                                                                                                                                                <p>When the app is running the indicator changes color and shows “Listening.”</p>
+                                                                                                                        </div>
+                                                                                                    </article>
+                                                                                                    <article class="how-to-card">
+                                                                                                                        <div class="step-badge">3</div>
+                                                                                                                        <img src="images/input-settings.png" alt="Input settings panel">
+                                                                                                                        <div class="card-body">
+                                                                                                                                                <h3>Select the input device</h3>
+                                                                                                                                                <p>Click the microphone settings in the search bar to open the input devices selector.</p>
+                                                                                                                        </div>
+                                                                                                    </article>
+                                                                                                    <article class="how-to-card">
+                                                                                                                        <div class="step-badge">4</div>
+                                                                                                                        <img src="images/mic-settings.png" alt="Microphone configuration dialog">
+                                                                                                                        <div class="card-body">
+                                                                                                                                                <h3>Confirm mic permissions</h3>
+                                                                                                                                                <p>Make sure your mic input is turned on, use the small arrow icon to select a different input.</p>
+                                                                                                                        </div>
+                                                                                                    </article>
+                                                                                                    <article class="how-to-card">
+                                                                                                                        <div class="step-badge">5</div>
+                                                                                                                        <img src="images/device-select.png" alt="Menu showing input devices">
+                                                                                                                        <div class="card-body">
+                                                                                                                                                <h3>Pick your input device</h3>
+                                                                                                                                                <p>Choose the audio source you want to transcribe from the device list by clicking the device select to open the menu.</p>
+                                                                                                                        </div>
+                                                                                                    </article>
+                                                                                                    <article class="how-to-card">
+                                                                                                                        <div class="step-badge">6</div>
+                                                                                                                        <img src="images/select-input.png" alt="Dropdown to select microphone input">
+                                                                                                                        <div class="card-body">
+                                                                                                                                                <h3>Select the correct device</h3>
+                                                                                                                                                <p>All active devices will be shown in the menu, pick the correct device for your needs.</p>
+                                                                                                                        </div>
+                                                                                                    </article>
+                                                                                </div>
+                                                            </div>
+                                        </section>
                     </div>
 
                     <script src="src/app.js"></script>
                     <script src="src/themes/factory-themes.js"></script>
                     <script src="src/themes/theme.js"></script>
+                    <script>
+                                        document.addEventListener('DOMContentLoaded', () => {
+                                                            const section = document.querySelector('.how-to');
+                                                            const toggle = document.getElementById('how-to-toggle');
+                                                            const content = document.getElementById('how-to-content');
+
+                                                            if (!section || !toggle || !content) return;
+
+                                                            const updateState = () => {
+                                                                                const collapsed = section.dataset.collapsed === 'true';
+                                                                                content.hidden = collapsed;
+                                                                                toggle.setAttribute('aria-expanded', String(!collapsed));
+                                                                                toggle.textContent = collapsed ? 'Show setup guide' : 'Hide setup guide';
+                                                            };
+
+                                                            toggle.addEventListener('click', () => {
+                                                                                const collapsed = section.dataset.collapsed === 'true';
+                                                                                section.dataset.collapsed = collapsed ? 'false' : 'true';
+                                                                                updateState();
+                                                            });
+
+                                                            updateState();
+                                        });
+                    </script>
 </body>
 
 </html>
